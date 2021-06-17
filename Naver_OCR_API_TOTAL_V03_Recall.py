@@ -50,20 +50,20 @@ window.mainloop()
 # 기관별로 API Key 변경
 
 if fine_venue == "지자체_광역":
-    api_url = 'https://29280af484d34729ada88dcd3bbbfe3a.apigw.ntruss.com/custom/v1/2043/aaa9cf96ce49c5c8d3e6bea76d81bc480f60c807ef941cb7af2c817fd1f47c71/infer'
-    secret_key = 'd0RuY0NacklPRmxXdW13SG1ya21mT2VLZnhXVGpaSFg='
+    api_url = ''
+    secret_key = ''
 
 elif fine_venue == "지자체_시군구":
-    api_url = 'https://29280af484d34729ada88dcd3bbbfe3a.apigw.ntruss.com/custom/v1/5369/d21e15b51cb358a639642abb48d8c82690ef1d03102fab6474fb880fc57fd39c/infer'
-    secret_key = 'T2ZkVWZCWUFWRXVEUmFLTVpMekpxRkpOY2pNVGplVk8='
+    api_url = ''
+    secret_key = ''
 
 elif fine_venue == "유료도로":
-    api_url = 'https://29280af484d34729ada88dcd3bbbfe3a.apigw.ntruss.com/custom/v1/2044/1ffeae9160f258c913e7676502d4deb33a54af5e167411995e9a4e809cb16ae6/infer'
-    secret_key = 'R21EYk5HT3VOVEphQ1VVdEVTbXZlaFFjUkZmaVVFYUw='
+    api_url = ''
+    secret_key = ''
 
 else :
-    api_url = 'https://29280af484d34729ada88dcd3bbbfe3a.apigw.ntruss.com/custom/v1/7374/33e675b44b7fdfa0085e0c4e0de3ff3768e82cee01570e8a3a97babba2855c51/infer'
-    secret_key = 'VXJwT1VUbVZDY2duU1RLU2JncFZCdkpLc2FDV0pMRXU='
+    api_url = ''
+    secret_key = ''
 
 
 resourse_im_root = "C:/AutoFine/10_Fine_Receipt_OCR/1_OCR_Scan_tif/"
