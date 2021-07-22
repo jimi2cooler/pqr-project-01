@@ -36,7 +36,7 @@ window.title("부과기관")
 window.geometry("200x100+800+300") # 가로길이 X 세로길이 + 가로좌표 + 세로좌표 
 
 Combobox1 = ttk.Combobox(textvariable=venue, width=30)
-Combobox1['value'] = ('지자체_광역', '지자체_시군구', '유료도로', '리콜통지서')
+Combobox1['value'] = ('지자체_광역', '지자체_시군구', '유료도로')
 Combobox1.current(0)
 
 Click_button = tk.Button(text="선택", command=combo_click)
@@ -62,8 +62,8 @@ elif fine_venue == "유료도로":
     secret_key = ''
 
 else :
-    api_url = ''
-    secret_key = ''
+    pass
+
 
 
 resourse_im_root = "C:/AutoFine/10_Fine_Receipt_OCR/1_OCR_Scan_tif/"
@@ -146,83 +146,55 @@ for b, ti in enumerate(target_images_ocr) :
             ocr_result['title'] = title
             ocr_result['uid'] = uid
             
-            if fine_venue != '리콜통지서' :
-
-                for i in range(fields_num) :
-                    field = result['images'][0]['fields'][i]['name']
-                    infer_text = result['images'][0]['fields'][i]['inferText']
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
-                    ocr_result[field] = infer_text.replace('\n', ' ')
-
-                # 특정 필드값 문자열 처리
-                try :
-                    ocr_result['차량번호'] = ocr_result['차량번호'].replace(' ', '')
-                    ocr_result['위반일시'] = "{0:0<12}".format("".join(re.findall("\d+", ocr_result['위반일시'])))
-                    ocr_result['납부금액'] = "".join(re.findall("\d+", ocr_result['납부금액']))
-                    ocr_result['납부기한'] = "{0:0<8}".format("".join(re.findall("\d+", ocr_result['납부기한'])))
-
-                except KeyError:
-                    pass
 
 
-                ocr_result_total[uid] = ocr_result
-                ocr_result_total[uid]['no'] = idx
-                ocr_result = {} 
-                
-                try :
-                    renamed_nm = title + "_" + ocr_result_total[uid]['발급기관'] + "_" + ocr_result_total[uid]['차량번호'] + "_" + ocr_result_total[uid]['위반일시'] 
-                    renamed_nm = re.sub(pattern=r'[^\w\s]', repl='', string=renamed_nm) + ".jpg"
-                    img_renamed_nm = ocr_result_total[uid]['차량번호'] + "_" + ocr_result_total[uid]['위반일시'] + ".jpg" # 일괄업로드 용 이미지파일명
-                    img_renamed_nm = re.sub(pattern=r'[^\w\s]', repl='', string=img_renamed_nm) + ".jpg"
-                except KeyError:
-                    renamed_nm = title + "_" + ocr_result_total[uid]['차량번호'] + "_" + ocr_result_total[uid]['위반일시']
-                    renamed_nm = re.sub(pattern=r'[^\w\s]', repl='', string=renamed_nm)+ ".jpg"
-                    img_renamed_nm = ocr_result_total[uid]['차량번호'] + "_" + ocr_result_total[uid]['위반일시']  # 일괄업로드 용 이미지파일명
-                    img_renamed_nm = re.sub(pattern=r'[^\w\s]', repl='', string=img_renamed_nm) + ".jpg"
-                
-                ocr_result_total[uid]['file_name'] = renamed_nm
+            for i in range(fields_num) :
+                field = result['images'][0]['fields'][i]['name']
+                infer_text = result['images'][0]['fields'][i]['inferText']
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+                ocr_result[field] = infer_text.replace('\n', ' ')
 
-                upload_img_path_after = upload_renamed_jpg_dir + img_renamed_nm.replace('jpg', "jpg")
+            # 특정 필드값 문자열 처리
+            try :
+                ocr_result['차량번호'] = ocr_result['차량번호'].replace(' ', '')
+                ocr_result['위반일시'] = "{0:0<12}".format("".join(re.findall("\d+", ocr_result['위반일시'])))
+                ocr_result['납부금액'] = "".join(re.findall("\d+", ocr_result['납부금액']))
+                ocr_result['납부기한'] = "{0:0<8}".format("".join(re.findall("\d+", ocr_result['납부기한'])))
 
-                shutil.copy(image_file, renamed_jpg_dir + renamed_nm)
-                
-                if os.path.exists(upload_img_path_after) :
-                    pass
+            except KeyError:
+                pass
 
-                else :
-                    shutil.copy(image_file, upload_img_path_after)
-                
-                print(renamed_nm + " is done!")
 
-                # 일괄업로드용 이미지 파일 생성 (기존 파일 복사해서 다른 폴더로 이동)
-                # resource_img_path = renamed_jpg_dir + renamed_nm
-                # upload_img_path = upload_renamed_jpg_dir + renamed_nm
-                # upload_img_path_after = upload_renamed_jpg_dir + img_renamed_nm
+            ocr_result_total[uid] = ocr_result
+            ocr_result_total[uid]['no'] = idx
+            ocr_result = {} 
+            
+            try :
+                renamed_nm = title + "_" + ocr_result_total[uid]['발급기관'] + "_" + ocr_result_total[uid]['차량번호'] + "_" + ocr_result_total[uid]['위반일시'] 
+                renamed_nm = re.sub(pattern=r'[^\w\s]', repl='', string=renamed_nm) + ".jpg"
+                img_renamed_nm = ocr_result_total[uid]['차량번호'] + "_" + ocr_result_total[uid]['위반일시'] + ".jpg" # 일괄업로드 용 이미지파일명
+                img_renamed_nm = re.sub(pattern=r'[^\w\s]', repl='', string=img_renamed_nm) + ".jpg"
+            except KeyError:
+                renamed_nm = title + "_" + ocr_result_total[uid]['차량번호'] + "_" + ocr_result_total[uid]['위반일시']
+                renamed_nm = re.sub(pattern=r'[^\w\s]', repl='', string=renamed_nm)+ ".jpg"
+                img_renamed_nm = ocr_result_total[uid]['차량번호'] + "_" + ocr_result_total[uid]['위반일시']  # 일괄업로드 용 이미지파일명
+                img_renamed_nm = re.sub(pattern=r'[^\w\s]', repl='', string=img_renamed_nm) + ".jpg"
+            
+            ocr_result_total[uid]['file_name'] = renamed_nm
 
-                # try : 
-                #     shutil.copy(ti, upload_img_path_after)
-                
-                # except :
-                #     pass
+            upload_img_path_after = upload_renamed_jpg_dir + img_renamed_nm
 
-                time.sleep(response.elapsed.total_seconds())
+            shutil.copy(image_file, renamed_jpg_dir + renamed_nm)
+            
+            if os.path.exists(upload_img_path_after) :
+                pass
 
-            # venue가 '리콜통지서인 경우'
+            else :
+                shutil.copy(image_file, upload_img_path_after)
+            
+            print(renamed_nm + " is done!")
 
-            else : 
-
-                for i in range(fields_num) :
-                    field = result['images'][0]['fields'][i]['name']
-                    infer_text = result['images'][0]['fields'][i]['inferText']
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
-                    ocr_result[field] = infer_text.replace('\n', ' ')
-
-                # 특정 필드값 문자열 처리
-                try :
-                    ocr_result['차대번호'] = ocr_result['차대번호'].replace(' ', '')
-                    
-                except KeyError:
-                    pass
+            time.sleep(0.2)
 
         except :
             continue
@@ -232,41 +204,17 @@ for b, ti in enumerate(target_images_ocr) :
         
         next
     
-    # 임시 jpg 폴더 내 파일 제거
-
-    # if os.path.exists(renamed_jpg_dir) :
-    #     for file in os.scandir(file.path) :
-    #         os.remove(file.path)
-
-    # else :
-    #     pass
-        
-
-
-
 
 # 3. Nested Dict 형태의 결과값을 특정필드를 정의한 후 자료를 읽어서 CSV 파일에 저장하기. 저장 parameter에서 'wb'이면 str 에러 발생, 이 경우 'w'로 하면 문제없음
 
-if fine_venue != '리콜통지서' :
 
-    csv_fields = ['no','file_name', 'title','발급기관', '차량번호', '위반장소', '위반일시', '위반내용', '납부기한', '납부금액', '고객조회번호', '전자납부번호']
+csv_fields = ['no','file_name', 'title','발급기관', '차량번호', '위반장소', '위반일시', '위반내용', '납부기한', '납부금액', '고객조회번호', '전자납부번호']
 
-    with open(output_csv_dir + "naver_ocr_result_" + work_date + ".csv", "w", newline='') as csv_f:
-        w = csv.DictWriter(csv_f, fieldnames = csv_fields)
-        w.writeheader()
-        for k in ocr_result_total :
-            w.writerow({field : ocr_result_total[k].get(field) or "" for field in csv_fields})
+with open(output_csv_dir + "naver_ocr_result_" + work_date + ".csv", "w", newline='') as csv_f:
+    w = csv.DictWriter(csv_f, fieldnames = csv_fields)
+    w.writeheader()
+    for k in ocr_result_total :
+        w.writerow({field : ocr_result_total[k].get(field) or "" for field in csv_fields})
 
-    print("Successfully Done! Good Job!")
+print("Successfully Done! Good Job!")
 
-else :
-
-    with open(output_csv_dir + "naver_ocr_result_" + work_date + ".csv", "w", newline='') as csv_f:
-        w = csv.DictWriter(csv_f, fieldnames = ['no','file_name', 'title','차대번호', '딜러사'])
-        w.writeheader()
-        for k in ocr_result_total :
-            w.writerow({field : ocr_result_total[k].get(field) or "" for field in csv_fields})
-
-    print("Successfully Done! Good Job!")
-
-    
