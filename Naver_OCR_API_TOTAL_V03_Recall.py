@@ -79,12 +79,10 @@ for a, image in enumerate(tif_images) :
     im = Image.open(image)
     im_n = im.n_frames
 
-    today = datetime.today().strftime('%Y%m%d')
-
     for i in range(im_n):
         try:
             im.seek(i)
-            im.save(destination + today +'_%s%s.jpg'%(a,i,))
+            im.save(destination + work_date +'_%s%s.jpg'%(a,i,))
         except EOFError:
             break
 
@@ -186,13 +184,13 @@ for b, ti in enumerate(target_images_ocr) :
 
                 upload_img_path_after = upload_renamed_jpg_dir + img_renamed_nm.replace('jpg', "jpg")
 
-                shutil.copy(ti, renamed_jpg_dir + renamed_nm)
+                shutil.copy(image_file, renamed_jpg_dir + renamed_nm)
                 
                 if os.path.exists(upload_img_path_after) :
                     pass
 
                 else :
-                    shutil.copy(ti, upload_img_path_after)
+                    shutil.copy(image_file, upload_img_path_after)
                 
                 print(renamed_nm + " is done!")
 
